@@ -6,6 +6,7 @@
     <title>رزرو هتل لوکس | بهترین هتل‌های ایران و جهان</title>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap"
           rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
 
     <style>
@@ -88,7 +89,7 @@
                     </div>
                 </div>
 
-                <button class="search-btn">
+                <button class="search-btn" id="searchBtnMain">
                     <i class="fas fa-search"></i>
                     جستجوی هتل
                 </button>
@@ -149,67 +150,7 @@
             <p>محبوب‌ترین هتل‌ها بر اساس انتخاب مسافران</p>
         </div>
 
-        <div class="hotels-grid">
-            <div class="hotel-card">
-                <div class="hotel-img">
-                    <img alt="هتل اصفهان"
-                         src="https://images.unsplash.com/photo-1564501049418-3c27787d01e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
-                </div>
-                <div class="hotel-info">
-                    <h3>هتل عباسی اصفهان</h3>
-                    <div class="hotel-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                        <span>(۴۷۸ نظر)</span>
-                    </div>
-                    <p><i class="fas fa-map-marker-alt"></i> اصفهان، خیابان چهارباغ</p>
-                    <div class="hotel-price">شبانه از ۲,۵۰۰,۰۰۰ تومان</div>
-                </div>
-            </div>
-
-            <div class="hotel-card">
-                <div class="hotel-img">
-                    <img alt="هتل تهران"
-                         src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
-                </div>
-                <div class="hotel-info">
-                    <h3>هتل اسپیناس تهران</h3>
-                    <div class="hotel-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <span>(۸۹۲ نظر)</span>
-                    </div>
-                    <p><i class="fas fa-map-marker-alt"></i> تهران، میدان ونک</p>
-                    <div class="hotel-price">شبانه از ۳,۲۰۰,۰۰۰ تومان</div>
-                </div>
-            </div>
-
-            <div class="hotel-card">
-                <div class="hotel-img">
-                    <img alt="هتل کیش"
-                         src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
-                </div>
-                <div class="hotel-info">
-                    <h3>هتل ترنج کیش</h3>
-                    <div class="hotel-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <span>(۱,۲۳۴ نظر)</span>
-                    </div>
-                    <p><i class="fas fa-map-marker-alt"></i> کیش، بلوار دریا</p>
-                    <div class="hotel-price">شبانه از ۴,۵۰۰,۰۰۰ تومان</div>
-                </div>
-            </div>
-        </div>
+        <div class="hotels-grid" id="popular-hotels-grid"></div>
     </div>
 </section>
 
@@ -266,7 +207,10 @@
     </div>
 </footer>
 
+<script src="config.js"></script>
 <script>
+    const api = (path) => `${window.BACKEND_BASE_URL}${path}`;
+    
     // تاریخ‌های پیش‌فرض
     const today = new Date();
     const tomorrow = new Date(today);
@@ -288,14 +232,117 @@
     });
 
     // مدیریت تب‌ها
+    let selectedType = 'hotel'; // پیش‌فرض: هتل
     document.querySelectorAll('.tab').forEach(tab => {
         tab.addEventListener('click', function () {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             this.classList.add('active');
+
+            // تعیین نوع انتخاب شده
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fa-hotel')) {
+                selectedType = 'hotel';
+            } else if (icon.classList.contains('fa-home')) {
+                selectedType = 'villa';
+            } else if (icon.classList.contains('fa-building')) {
+                selectedType = 'apartment';
+            }
         });
     });
+
+    // بارگذاری هتل‌های پرطرفدار
+    async function loadPopularHotels() {
+        try {
+            const response = await fetch(api('/api/hotels/popular?limit=3'));
+            if (!response.ok) throw new Error('خطا در دریافت هتل‌ها');
+
+            const hotels = await response.json();
+            const hotelsGrid = document.getElementById('popular-hotels-grid');
+            hotelsGrid.innerHTML = '';
+
+            for (const hotel of hotels) {
+                // محاسبه کمترین قیمت
+                let minPrice = null;
+                try {
+                    const roomsRes = await fetch(api(`/api/hotels/${hotel.id}/rooms`));
+                    if (roomsRes.ok) {
+                        const rooms = await roomsRes.json();
+                        for (const room of rooms) {
+                            if (minPrice === null || room.pricePerNight < minPrice) {
+                                minPrice = room.pricePerNight;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error fetching rooms:', e);
+                }
+
+                // تولید ستاره‌ها
+                const rating = hotel.rating || 0;
+                let starsHtml = '';
+                const fullStars = Math.floor(rating);
+                const hasHalfStar = rating - fullStars >= 0.5;
+                for (let i = 0; i < fullStars && i < 5; i++) {
+                    starsHtml += '<i class="fas fa-star"></i>';
+                }
+                if (hasHalfStar && fullStars < 5) {
+                    starsHtml += '<i class="fas fa-star-half-alt"></i>';
+                }
+                for (let i = fullStars + (hasHalfStar ? 1 : 0); i < 5; i++) {
+                    starsHtml += '<i class="far fa-star"></i>';
+                }
+
+                const hotelCard = document.createElement('div');
+                hotelCard.className = 'hotel-card';
+                hotelCard.style.cursor = 'pointer';
+                hotelCard.onclick = () => window.location.href = `hotel-details.html?id=${hotel.id}`;
+
+                hotelCard.innerHTML = `
+                    <div class="hotel-img">
+                        <img src="${hotel.imageUrl || 'https://images.unsplash.com/photo-1564501049418-3c27787d01e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'}" 
+                             alt="${hotel.name}" 
+                             onerror="this.src='https://images.unsplash.com/photo-1564501049418-3c27787d01e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    </div>
+                    <div class="hotel-info">
+                        <h3>${hotel.name}</h3>
+                        <div class="hotel-rating">
+                            ${starsHtml}
+                            <span>(${hotel.reviewCount || 0} نظر)</span>
+                        </div>
+                        <p><i class="fas fa-map-marker-alt"></i> ${hotel.city}${hotel.address ? '، ' + hotel.address : ''}</p>
+                        <div class="hotel-price">شبانه از ${minPrice ? minPrice.toLocaleString('fa-IR') + ' تومان' : 'قیمت نامشخص'}</div>
+                    </div>
+                `;
+
+                hotelsGrid.appendChild(hotelCard);
+            }
+        } catch (error) {
+            console.error('Error loading popular hotels:', error);
+            // در صورت خطا، نمایش پیام یا هتل‌های پیش‌فرض
+        }
+    }
+
+    // اجرای جستجو
+    function performSearch() {
+        const city = document.querySelector('input[list="cities"]').value || '';
+        const checkin = document.getElementById('checkin').value;
+        const checkout = document.getElementById('checkout').value;
+
+        // ساخت URL برای صفحه نتایج
+        const params = new URLSearchParams();
+        if (city) params.append('city', city);
+        if (selectedType) params.append('type', selectedType);
+        if (checkin) params.append('checkin', checkin);
+        if (checkout) params.append('checkout', checkout);
+
+        window.location.href = `search-results.html?${params.toString()}`;
+    }
+
+    // اتصال دکمه جستجو
+    document.getElementById('searchBtnMain').addEventListener('click', performSearch);
+
+    // بارگذاری هتل‌های پرطرفدار هنگام لود صفحه
+    loadPopularHotels();
 </script>
-<script src="config.js"></script>
-<script src="app.js"></script>
 </body>
 </html>

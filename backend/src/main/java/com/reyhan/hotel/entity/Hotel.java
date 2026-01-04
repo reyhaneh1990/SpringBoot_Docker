@@ -1,14 +1,9 @@
 package com.reyhan.hotel.entity; // پکیج موجودیت‌ها
 
-import java.util.ArrayList; // پیاده‌سازی لیست برای نگه‌داشتن اتاق‌ها
-import java.util.List; // رابط لیست برای مجموعه اتاق‌ها
+import jakarta.persistence.*;
 
-import jakarta.persistence.CascadeType; // کنترل عملیات cascade بین هتل و اتاق
-import jakarta.persistence.Entity; // مشخص می‌کند کلاس یک موجودیت JPA است
-import jakarta.persistence.GeneratedValue; // تولید خودکار کلید اصلی
-import jakarta.persistence.GenerationType; // استراتژی تولید شناسه
-import jakarta.persistence.Id; // تعیین کلید اصلی
-import jakarta.persistence.OneToMany; // رابطه یک‌به‌چند با اتاق‌ها
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * موجودیت هتل - نمایانگر یک هتل در سیستم
@@ -37,6 +32,48 @@ public class Hotel { // تعریف موجودیت هتل
 	 * آدرس دقیق هتل
 	 */
 	private String address; // آدرس کامل هتل
+
+    /**
+     * نوع اقامتگاه (hotel, villa, apartment)
+     */
+    private String type; // نوع اقامتگاه
+
+    /**
+     * آدرس تصویر اصلی هتل
+     */
+    private String imageUrl; // آدرس تصویر اصلی
+
+    /**
+     * لیست آدرس‌های تصاویر بیشتر (ذخیره به صورت کاما جدا شده)
+     */
+    @Lob // فیلد بزرگ برای ذخیره لیست تصاویر
+    private String images; // لیست تصاویر به صورت کاما جدا شده
+
+    /**
+     * امتیاز هتل (از 1 تا 5)
+     */
+    private Double rating; // امتیاز هتل
+
+    /**
+     * تعداد نظرات
+     */
+    private Integer reviewCount; // تعداد نظرات
+
+    /**
+     * شماره تلفن هتل
+     */
+    private String phone; // شماره تلفن
+
+    /**
+     * ایمیل هتل
+     */
+    private String email; // ایمیل هتل
+
+    /**
+     * توضیحات هتل
+     */
+    @Lob // فیلد بزرگ برای توضیحات
+    private String description; // توضیحات کامل هتل
 
 	/**
 	 * لیست اتاق‌های این هتل
@@ -78,7 +115,71 @@ public class Hotel { // تعریف موجودیت هتل
 	}
 
 	public void setRooms(List<Room> rooms) { // جایگزینی لیست اتاق‌ها
-		this.rooms = rooms; // ذخیره لیست جدید
+        this.rooms = rooms; // ذخیره لیست جدید
+    }
+
+    public String getType() { // دریافت نوع اقامتگاه
+        return type; // بازگرداندن نوع
+    }
+
+    public void setType(String type) { // تنظیم نوع اقامتگاه
+        this.type = type; // ذخیره مقدار
+    }
+
+    public String getImageUrl() { // دریافت آدرس تصویر اصلی
+        return imageUrl; // بازگرداندن آدرس تصویر
+    }
+
+    public void setImageUrl(String imageUrl) { // تنظیم آدرس تصویر اصلی
+        this.imageUrl = imageUrl; // ذخیره مقدار
+    }
+
+    public String getImages() { // دریافت لیست تصاویر
+        return images; // بازگرداندن لیست
+    }
+
+    public void setImages(String images) { // تنظیم لیست تصاویر
+        this.images = images; // ذخیره مقدار
+    }
+
+    public Double getRating() { // دریافت امتیاز
+        return rating; // بازگرداندن امتیاز
+    }
+
+    public void setRating(Double rating) { // تنظیم امتیاز
+        this.rating = rating; // ذخیره مقدار
+    }
+
+    public Integer getReviewCount() { // دریافت تعداد نظرات
+        return reviewCount; // بازگرداندن تعداد
+    }
+
+    public void setReviewCount(Integer reviewCount) { // تنظیم تعداد نظرات
+        this.reviewCount = reviewCount; // ذخیره مقدار
+    }
+
+    public String getPhone() { // دریافت شماره تلفن
+        return phone; // بازگرداندن شماره
+    }
+
+    public void setPhone(String phone) { // تنظیم شماره تلفن
+        this.phone = phone; // ذخیره مقدار
+    }
+
+    public String getEmail() { // دریافت ایمیل
+        return email; // بازگرداندن ایمیل
+    }
+
+    public void setEmail(String email) { // تنظیم ایمیل
+        this.email = email; // ذخیره مقدار
+    }
+
+    public String getDescription() { // دریافت توضیحات
+        return description; // بازگرداندن توضیحات
+    }
+
+    public void setDescription(String description) { // تنظیم توضیحات
+        this.description = description; // ذخیره مقدار
 	}
 }
 

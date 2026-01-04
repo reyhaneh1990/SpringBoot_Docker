@@ -1,21 +1,15 @@
 package com.reyhan.hotel.controller; // پکیج مربوط به کنترلرهای REST
 
-import java.time.LocalDate; // نوع تاریخ برای فیلتر کردن اتاق‌ها
-import java.util.List; // برای بازگرداندن مجموعه نتایج
+import com.reyhan.hotel.entity.Hotel;
+import com.reyhan.hotel.entity.Room;
+import com.reyhan.hotel.repository.HotelRepository;
+import com.reyhan.hotel.repository.RoomRepository;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.format.annotation.DateTimeFormat; // تبدیل رشته تاریخ ورودی به LocalDate
-import org.springframework.http.ResponseEntity; // ساخت پاسخ HTTP با وضعیت مناسب
-import org.springframework.web.bind.annotation.CrossOrigin; // مجوز دسترسی از دامنه‌های دیگر
-import org.springframework.web.bind.annotation.GetMapping; // نگاشت درخواست GET
-import org.springframework.web.bind.annotation.PathVariable; // خواندن متغیر مسیر از URL
-import org.springframework.web.bind.annotation.RequestMapping; // تعریف مسیر پایه کنترلر
-import org.springframework.web.bind.annotation.RequestParam; // خواندن پارامتر query string
-import org.springframework.web.bind.annotation.RestController; // ترکیب @Controller و @ResponseBody
-
-import com.reyhan.hotel.entity.Hotel; // مدل داده هتل
-import com.reyhan.hotel.entity.Room; // مدل داده اتاق
-import com.reyhan.hotel.repository.HotelRepository; // مخزن CRUD برای هتل
-import com.reyhan.hotel.repository.RoomRepository; // مخزن برای جستجوی اتاق‌ها
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * کنترلر REST API برای مدیریت هتل‌ها و اتاق‌ها
@@ -77,6 +71,54 @@ public class HotelController { // تعریف کلاس کنترلر
 			.map(h -> ResponseEntity.ok(h.getRooms())) // تبدیل به پاسخ شامل اتاق‌ها
 			.orElse(ResponseEntity.notFound().build()); // در صورت نبود هتل، برگرداندن 404
 	}
+
+    /**
+     * جستجوی هتل‌ها بر اساس شهر، نوع و تاریخ‌های اقامت
+     *
+     * @param city     شهر مقصد (اختیاری)
+     * @param type     نوع اقامتگاه: hotel, villa, apartment (اختیاری)
+     * @param checkin  تاریخ ورود (اختیاری)
+     * @param checkout تاریخ خروج (اختیاری)
+     * @return لیست هتل‌های مطابق معیارها
+     */
+    @GetMapping("/search") // هندلر GET /api/hotels/search
+    public List<Hotel> searchHotels(@RequestParam(required = false) String city, // شهر مقصد
+                                    @RequestParam(required = false) String type, // نوع اقامتگاه
+                                    @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkin, // تاریخ ورود
+                                    @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkout) { // تاریخ خروج
+        if (checkin != null && checkout != null) { // اگر تاریخ‌ها مشخص شده باشند
+            return hotelRepository.searchAvailableHotels(city, type, checkin, checkout); // جستجوی هتل‌های با اتاق موجود
+        }
+        return hotelRepository.searchHotels(city, type); // جستجوی کلی
+    }
+
+    /**
+     * دریافت هتل‌های پرطرفدار
+     *
+     * @param limit تعداد هتل‌های بازگشتی (پیش‌فرض: 10)
+     * @return لیست هتل‌های پرطرفدار
+     */
+    @GetMapping("/popular") // هندلر GET /api/hotels/popular
+    public List<Hotel> getPopularHotels(@RequestParam(defaultValue = "10") int limit) { // تعداد هتل‌ها
+        List<Hotel> hotels = hotelRepository.findPopularHotels(); // دریافت هتل‌های پرطرفدار
+        if (hotels.size() > limit) { // اگر بیشتر از limit باشد
+            return hotels.subList(0, limit); // برگرداندن فقط limit تای اول
+        }
+        return hotels; // برگرداندن تمام لیست
+    }
+
+    /**
+     * دریافت جزئیات یک هتل بر اساس شناسه
+     *
+     * @param id شناسه هتل
+     * @return هتل یا 404 اگر پیدا نشود
+     */
+    @GetMapping("/{id}") // هندلر GET /api/hotels/{id}
+    public ResponseEntity<Hotel> getHotelDetails(@PathVariable Long id) { // شناسه هتل
+        return hotelRepository.findById(id) // جستجوی هتل
+                .map(ResponseEntity::ok) // تبدیل به ResponseEntity
+                .orElse(ResponseEntity.notFound().build()); // در صورت نبود، 404
+    }
 }
 
 
