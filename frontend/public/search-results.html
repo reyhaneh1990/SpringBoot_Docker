@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>نتایج جستجو | هتل مارکوپولو</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="container nav-container">
+        <a class="logo" href="index.html">
+            <i class="fas fa-crown"></i>
+            هتل مارکوپولو
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fas fa-bed"></i> هتل</a></li>
+            <li><a href="flight.html"><i class="fas fa-plane"></i> پرواز</a></li>
+            <li><a href="train.html"><i class="fas fa-train"></i> قطار</a></li>
+            <li><a href="#"><i class="fas fa-bus"></i> اتوبوس</a></li>
+            <li><a href="#"><i class="fas fa-umbrella-beach"></i> تور</a></li>
+        </ul>
+
+        <div class="auth-buttons">
+            <button class="btn btn-outline"><i class="fas fa-sign-in-alt"></i> ورود</button>
+            <button class="btn btn-primary" onclick="window.location.href='regester.html'"><i
+                    class="fas fa-user-plus"></i> ثبت‌نام
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Search Results Section -->
+<section class="popular-hotels" style="margin-top: 100px;">
+    <div class="container">
+        <div class="section-title">
+            <h2 id="search-title">نتایج جستجو</h2>
+            <p id="search-subtitle">نتایج جستجوی شما</p>
+        </div>
+
+        <div id="search-results-container">
+            <div id="loading" style="text-align: center; padding: 3rem;">
+                <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i>
+                <p style="margin-top: 1rem;">در حال جستجو...</p>
+            </div>
+            <div id="no-results" style="display: none; text-align: center; padding: 3rem;">
+                <i class="fas fa-search fa-3x" style="color: #ccc; margin-bottom: 1rem;"></i>
+                <h3>نتیجه‌ای یافت نشد</h3>
+                <p>لطفاً معیارهای جستجو را تغییر دهید و دوباره تلاش کنید.</p>
+                <button class="btn btn-primary" onclick="window.location.href='index.html'" style="margin-top: 1rem;">
+                    بازگشت به صفحه اصلی
+                </button>
+            </div>
+            <div class="hotels-grid" id="hotels-grid" style="display: none;"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>هتل‌پلاس</h3>
+                <p>سامانه رزرو آنلاین هتل با ارائه بهترین خدمات و تضمین کمترین قیمت برای تجربه‌ای بی‌نظیر از سفر.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>لینک‌های مفید</h3>
+                <ul>
+                    <li><a href="#">درباره ما</a></li>
+                    <li><a href="#">تماس با ما</a></li>
+                    <li><a href="#">قوانین و مقررات</a></li>
+                    <li><a href="#">سوالات متداول</a></li>
+                    <li><a href="#">وبلاگ</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>خدمات ما</h3>
+                <ul>
+                    <li><a href="#">رزرو هتل داخلی</a></li>
+                    <li><a href="#">رزرو هتل خارجی</a></li>
+                    <li><a href="#">تورهای لحظه آخری</a></li>
+                    <li><a href="#">اجاره ویلا و سوئیت</a></li>
+                    <li><a href="#">رزرو پرواز</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>تماس با ما</h3>
+                <ul>
+                    <li><i class="fas fa-phone"></i> ۰۲۱-۹۱۰۱۱۱۱۱</li>
+                    <li><i class="fas fa-envelope"></i> info@hotelplus.ir</li>
+                    <li><i class="fas fa-map-marker-alt"></i> تهران، خیابان ولیعصر</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <p>© ۲۰۲۴ تمامی حقوق برای هتل‌پلاس محفوظ است.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="config.js"></script>
+<script>
+    const api = (path) => `${window.BACKEND_BASE_URL}${path}`;
+
+    // دریافت پارامترهای URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const city = urlParams.get('city') || '';
+    const type = urlParams.get('type') || '';
+    const checkin = urlParams.get('checkin') || '';
+    const checkout = urlParams.get('checkout') || '';
+
+    // نمایش اطلاعات جستجو
+    const searchTitle = document.getElementById('search-title');
+    const searchSubtitle = document.getElementById('search-subtitle');
+    let subtitleText = 'نتایج جستجو';
+    if (city) subtitleText += ` برای "${city}"`;
+    if (type) {
+        const typeText = type === 'hotel' ? 'هتل' : type === 'villa' ? 'ویلا' : 'آپارتمان';
+        subtitleText += ` - ${typeText}`;
+    }
+    if (checkin && checkout) subtitleText += ` از ${checkin} تا ${checkout}`;
+    searchSubtitle.textContent = subtitleText;
+
+    // جستجوی هتل‌ها
+    async function searchHotels() {
+        const loading = document.getElementById('loading');
+        const noResults = document.getElementById('no-results');
+        const hotelsGrid = document.getElementById('hotels-grid');
+
+        try {
+            let url = api('/api/hotels/search?');
+            const params = new URLSearchParams();
+            if (city) params.append('city', city);
+            if (type) params.append('type', type);
+            if (checkin) params.append('checkin', checkin);
+            if (checkout) params.append('checkout', checkout);
+            url += params.toString();
+
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('خطا در جستجو');
+
+            const hotels = await response.json();
+
+            loading.style.display = 'none';
+
+            if (!hotels || hotels.length === 0) {
+                noResults.style.display = 'block';
+                return;
+            }
+
+            hotelsGrid.style.display = 'grid';
+            hotelsGrid.innerHTML = '';
+
+            // نمایش هتل‌ها
+            for (const hotel of hotels) {
+                // محاسبه کمترین قیمت
+                let minPrice = null;
+                try {
+                    const roomsRes = await fetch(api(`/api/hotels/${hotel.id}/rooms`));
+                    if (roomsRes.ok) {
+                        const rooms = await roomsRes.json();
+                        for (const room of rooms) {
+                            if (minPrice === null || room.pricePerNight < minPrice) {
+                                minPrice = room.pricePerNight;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error fetching rooms:', e);
+                }
+
+                // تولید ستاره‌ها
+                const rating = hotel.rating || 0;
+                let starsHtml = '';
+                const fullStars = Math.floor(rating);
+                const hasHalfStar = rating - fullStars >= 0.5;
+                for (let i = 0; i < fullStars && i < 5; i++) {
+                    starsHtml += '<i class="fas fa-star"></i>';
+                }
+                if (hasHalfStar && fullStars < 5) {
+                    starsHtml += '<i class="fas fa-star-half-alt"></i>';
+                }
+                for (let i = fullStars + (hasHalfStar ? 1 : 0); i < 5; i++) {
+                    starsHtml += '<i class="far fa-star"></i>';
+                }
+
+                const hotelCard = document.createElement('div');
+                hotelCard.className = 'hotel-card';
+                hotelCard.style.cursor = 'pointer';
+                hotelCard.onclick = () => window.location.href = `hotel-details.html?id=${hotel.id}`;
+
+                hotelCard.innerHTML = `
+                    <div class="hotel-img">
+                        <img src="${hotel.imageUrl || 'https://images.unsplash.com/photo-1564501049418-3c27787d01e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'}" 
+                             alt="${hotel.name}" 
+                             onerror="this.src='https://images.unsplash.com/photo-1564501049418-3c27787d01e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    </div>
+                    <div class="hotel-info">
+                        <h3>${hotel.name}</h3>
+                        <div class="hotel-rating">
+                            ${starsHtml}
+                            <span>(${hotel.reviewCount || 0} نظر)</span>
+                        </div>
+                        <p><i class="fas fa-map-marker-alt"></i> ${hotel.city}${hotel.address ? '، ' + hotel.address : ''}</p>
+                        <div class="hotel-price">شبانه از ${minPrice ? minPrice.toLocaleString('fa-IR') + ' تومان' : 'قیمت نامشخص'}</div>
+                    </div>
+                `;
+
+                hotelsGrid.appendChild(hotelCard);
+            }
+        } catch (error) {
+            console.error('Error searching hotels:', error);
+            loading.style.display = 'none';
+            noResults.style.display = 'block';
+        }
+    }
+
+    // اجرای جستجو هنگام لود صفحه
+    searchHotels();
+</script>
+</body>
+</html>
+

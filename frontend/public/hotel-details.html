@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>جزئیات هتل | هتل مارکوپولو</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <style>
+        .hotel-details {
+            margin-top: 100px;
+            padding: 2rem 0;
+        }
+
+        .hotel-header {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .hotel-name {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .hotel-location {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .hotel-contact {
+            background: var(--light);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-item i {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .gallery {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .gallery-item {
+            border-radius: 15px;
+            overflow: hidden;
+            height: 200px;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .description {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .description h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .description p {
+            line-height: 2;
+            color: #555;
+        }
+
+        .rooms-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .room-card {
+            border: 2px solid var(--light);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .room-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .room-type {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .room-number {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .room-capacity {
+            margin-bottom: 1rem;
+        }
+
+        .room-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="container nav-container">
+        <a class="logo" href="index.html">
+            <i class="fas fa-crown"></i>
+            هتل مارکوپولو
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fas fa-bed"></i> هتل</a></li>
+            <li><a href="flight.html"><i class="fas fa-plane"></i> پرواز</a></li>
+            <li><a href="train.html"><i class="fas fa-train"></i> قطار</a></li>
+            <li><a href="#"><i class="fas fa-bus"></i> اتوبوس</a></li>
+            <li><a href="#"><i class="fas fa-umbrella-beach"></i> تور</a></li>
+        </ul>
+
+        <div class="auth-buttons">
+            <button class="btn btn-outline"><i class="fas fa-sign-in-alt"></i> ورود</button>
+            <button class="btn btn-primary" onclick="window.location.href='regester.html'"><i
+                    class="fas fa-user-plus"></i> ثبت‌نام
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Hotel Details Section -->
+<section class="hotel-details">
+    <div class="container">
+        <div id="loading" style="text-align: center; padding: 5rem;">
+            <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i>
+            <p style="margin-top: 1rem;">در حال بارگذاری...</p>
+        </div>
+
+        <div id="hotel-content" style="display: none;">
+            <!-- Hotel Header -->
+            <div class="hotel-header">
+                <div class="hotel-img"
+                     style="margin-bottom: 2rem; border-radius: 20px; overflow: hidden; height: 400px;">
+                    <img alt="هتل" id="main-image" src="" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <h1 class="hotel-name" id="hotel-name"></h1>
+                <div class="hotel-rating" id="hotel-rating" style="margin-bottom: 1rem;"></div>
+                <div class="hotel-location" id="hotel-location"></div>
+
+                <div class="hotel-contact">
+                    <h3 style="margin-bottom: 1rem; color: var(--primary);">اطلاعات تماس</h3>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span id="hotel-phone"></span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span id="hotel-email"></span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span id="hotel-address"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gallery -->
+            <div class="gallery" id="gallery-section" style="display: none;">
+                <h2>گالری تصاویر</h2>
+                <div class="gallery-grid" id="gallery-grid"></div>
+            </div>
+
+            <!-- Description -->
+            <div class="description" id="description-section" style="display: none;">
+                <h3>توضیحات</h3>
+                <p id="hotel-description"></p>
+            </div>
+
+            <!-- Rooms -->
+            <div class="rooms-section">
+                <h2>اتاق‌ها و قیمت‌ها</h2>
+                <div class="rooms-grid" id="rooms-grid"></div>
+            </div>
+        </div>
+
+        <div id="error" style="display: none; text-align: center; padding: 5rem;">
+            <i class="fas fa-exclamation-circle fa-3x" style="color: #f44336; margin-bottom: 1rem;"></i>
+            <h3>هتل مورد نظر یافت نشد</h3>
+            <p>لطفاً به صفحه اصلی بازگردید و دوباره تلاش کنید.</p>
+            <button class="btn btn-primary" onclick="window.location.href='index.html'" style="margin-top: 1rem;">
+                بازگشت به صفحه اصلی
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>هتل‌پلاس</h3>
+                <p>سامانه رزرو آنلاین هتل با ارائه بهترین خدمات و تضمین کمترین قیمت برای تجربه‌ای بی‌نظیر از سفر.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>لینک‌های مفید</h3>
+                <ul>
+                    <li><a href="#">درباره ما</a></li>
+                    <li><a href="#">تماس با ما</a></li>
+                    <li><a href="#">قوانین و مقررات</a></li>
+                    <li><a href="#">سوالات متداول</a></li>
+                    <li><a href="#">وبلاگ</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>خدمات ما</h3>
+                <ul>
+                    <li><a href="#">رزرو هتل داخلی</a></li>
+                    <li><a href="#">رزرو هتل خارجی</a></li>
+                    <li><a href="#">تورهای لحظه آخری</a></li>
+                    <li><a href="#">اجاره ویلا و سوئیت</a></li>
+                    <li><a href="#">رزرو پرواز</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>تماس با ما</h3>
+                <ul>
+                    <li><i class="fas fa-phone"></i> ۰۲۱-۹۱۰۱۱۱۱۱</li>
+                    <li><i class="fas fa-envelope"></i> info@hotelplus.ir</li>
+                    <li><i class="fas fa-map-marker-alt"></i> تهران، خیابان ولیعصر</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <p>© ۲۰۲۴ تمامی حقوق برای هتل‌پلاس محفوظ است.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="config.js"></script>
+<script>
+    const api = (path) => `${window.BACKEND_BASE_URL}${path}`;
+
+    // دریافت شناسه هتل از URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const hotelId = urlParams.get('id');
+
+    if (!hotelId) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('error').style.display = 'block';
+    } else {
+        loadHotelDetails();
+    }
+
+    async function loadHotelDetails() {
+        const loading = document.getElementById('loading');
+        const content = document.getElementById('hotel-content');
+        const error = document.getElementById('error');
+
+        try {
+            // دریافت اطلاعات هتل
+            const hotelRes = await fetch(api(`/api/hotels/${hotelId}`));
+            if (!hotelRes.ok) throw new Error('هتل یافت نشد');
+
+            const hotel = await hotelRes.json();
+
+            // دریافت اتاق‌ها
+            const roomsRes = await fetch(api(`/api/hotels/${hotelId}/rooms`));
+            const rooms = roomsRes.ok ? await roomsRes.json() : [];
+
+            // نمایش اطلاعات هتل
+            document.getElementById('hotel-name').textContent = hotel.name;
+            document.title = `${hotel.name} | هتل مارکوپولو`;
+
+            // آدرس و موقعیت
+            const location = `${hotel.city}${hotel.address ? '، ' + hotel.address : ''}`;
+            document.getElementById('hotel-location').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${location}`;
+            document.getElementById('hotel-address').textContent = hotel.address || hotel.city || '—';
+
+            // امتیاز
+            const rating = hotel.rating || 0;
+            const reviewCount = hotel.reviewCount || 0;
+            let starsHtml = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating - fullStars >= 0.5;
+            for (let i = 0; i < fullStars && i < 5; i++) {
+                starsHtml += '<i class="fas fa-star"></i>';
+            }
+            if (hasHalfStar && fullStars < 5) {
+                starsHtml += '<i class="fas fa-star-half-alt"></i>';
+            }
+            for (let i = fullStars + (hasHalfStar ? 1 : 0); i < 5; i++) {
+                starsHtml += '<i class="far fa-star"></i>';
+            }
+            document.getElementById('hotel-rating').innerHTML = starsHtml + ` <span>(${reviewCount} نظر)</span>`;
+
+            // تماس
+            document.getElementById('hotel-phone').textContent = hotel.phone || '—';
+            document.getElementById('hotel-email').textContent = hotel.email || '—';
+
+            // تصویر اصلی
+            const mainImage = document.getElementById('main-image');
+            if (hotel.imageUrl) {
+                mainImage.src = hotel.imageUrl;
+                mainImage.onerror = () => {
+                    mainImage.src = 'https://images.unsplash.com/photo-1564501049418-3c27787d01e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                };
+            } else {
+                mainImage.src = 'https://images.unsplash.com/photo-1564501049418-3c27787d01e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+            }
+            mainImage.alt = hotel.name;
+
+            // گالری تصاویر
+            if (hotel.images) {
+                const imageUrls = hotel.images.split(',').map(url => url.trim()).filter(url => url);
+                if (imageUrls.length > 0) {
+                    const gallerySection = document.getElementById('gallery-section');
+                    const galleryGrid = document.getElementById('gallery-grid');
+                    galleryGrid.innerHTML = '';
+
+                    for (const imgUrl of imageUrls) {
+                        const galleryItem = document.createElement('div');
+                        galleryItem.className = 'gallery-item';
+                        const img = document.createElement('img');
+                        img.src = imgUrl;
+                        img.alt = hotel.name;
+                        img.onerror = () => galleryItem.style.display = 'none';
+                        galleryItem.appendChild(img);
+                        galleryGrid.appendChild(galleryItem);
+                    }
+
+                    gallerySection.style.display = 'block';
+                }
+            }
+
+            // توضیحات
+            if (hotel.description) {
+                document.getElementById('hotel-description').textContent = hotel.description;
+                document.getElementById('description-section').style.display = 'block';
+            }
+
+            // اتاق‌ها
+            const roomsGrid = document.getElementById('rooms-grid');
+            if (rooms && rooms.length > 0) {
+                roomsGrid.innerHTML = '';
+                for (const room of rooms) {
+                    const roomCard = document.createElement('div');
+                    roomCard.className = 'room-card';
+                    roomCard.innerHTML = `
+                        <div class="room-type">${room.type || 'نامشخص'}</div>
+                        <div class="room-number">شماره اتاق: ${room.number || '—'}</div>
+                        <div class="room-capacity">ظرفیت: ${room.capacity || '—'} نفر</div>
+                        <div class="room-price">${room.pricePerNight ? room.pricePerNight.toLocaleString('fa-IR') + ' تومان / شب' : 'قیمت نامشخص'}</div>
+                    `;
+                    roomsGrid.appendChild(roomCard);
+                }
+            } else {
+                roomsGrid.innerHTML = '<p style="text-align: center; color: #666;">اتاقی برای این هتل ثبت نشده است.</p>';
+            }
+
+            loading.style.display = 'none';
+            content.style.display = 'block';
+
+        } catch (error) {
+            console.error('Error loading hotel details:', error);
+            loading.style.display = 'none';
+            error.style.display = 'block';
+        }
+    }
+</script>
+</body>
+</html>
+
