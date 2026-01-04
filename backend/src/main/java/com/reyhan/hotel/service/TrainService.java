@@ -27,10 +27,18 @@ public class TrainService {
      * جستجوی قطار
      */
     public List<Train> searchTrains(String origin, String destination, LocalDate date, String trainClass) {
-        if (trainClass != null && !trainClass.isEmpty()) {
-            return trainRepository.findByTrainClassAndDepartureDateAndOriginAndDestination(trainClass, date, origin, destination);
+        return trainRepository.searchTrains(origin, destination, date, trainClass);
+    }
+
+    /**
+     * دریافت قطارهای پرطرفدار
+     */
+    public List<Train> findPopularTrains(int limit) {
+        List<Train> trains = trainRepository.findPopularTrains();
+        if (trains.size() > limit) {
+            return trains.subList(0, limit);
         }
-        return trainRepository.searchTrains(origin, destination, date);
+        return trains;
     }
 
     /**

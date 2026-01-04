@@ -1,9 +1,6 @@
 package com.reyhan.hotel.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -27,6 +24,33 @@ public class Train {
     private Integer availableSeats;
     private Double price;
     private String stops; // ایستگاه‌های میانی (مثلاً "سمنان، شاهرود")
+
+    /**
+     * آدرس تصویر اصلی قطار
+     */
+    private String imageUrl;
+
+    /**
+     * لیست آدرس‌های تصاویر بیشتر (ذخیره به صورت کاما جدا شده)
+     */
+    @Lob
+    private String images;
+
+    /**
+     * شماره تلفن شرکت
+     */
+    private String phone;
+
+    /**
+     * ایمیل شرکت
+     */
+    private String email;
+
+    /**
+     * توضیحات
+     */
+    @Lob
+    private String description;
 
     public Long getId() {
         return id;
@@ -110,6 +134,46 @@ public class Train {
 
     public void setStops(String stops) {
         this.stops = stops;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
 

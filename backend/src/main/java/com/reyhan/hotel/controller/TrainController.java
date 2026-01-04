@@ -39,11 +39,19 @@ public class TrainController {
      */
     @GetMapping("/search")
     public List<Train> searchTrains(
-            @RequestParam String origin,
-            @RequestParam String destination,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(required = false) String origin,
+            @RequestParam(required = false) String destination,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
             @RequestParam(required = false) String trainClass) {
         return trainService.searchTrains(origin, destination, date, trainClass);
+    }
+
+    /**
+     * دریافت قطارهای پرطرفدار
+     */
+    @GetMapping("/popular")
+    public List<Train> getPopularTrains(@RequestParam(defaultValue = "10") int limit) {
+        return trainService.findPopularTrains(limit);
     }
 
     /**

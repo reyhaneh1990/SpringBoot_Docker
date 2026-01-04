@@ -173,3 +173,157 @@ VALUES (12, 'Apt 101', '1 Bedroom', 2, 1200000),
        (12, 'Apt 102', '2 Bedroom', 4, 2000000),
        (12, 'Apt 201', '2 Bedroom', 4, 2200000);
 
+-- ============================================
+-- داده‌های تستی برای قطار، پرواز و اتوبوس
+-- ============================================
+
+-- درج قطارهای تستی
+INSERT INTO train (origin, destination, departure_date, departure_time, arrival_time, train_name, train_class,
+                   available_seats, price, stops, image_url, images, phone, email, description)
+VALUES
+-- قطارهای تهران - مشهد
+('تهران', 'مشهد', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '17:00:00', '05:00:00', 'شهید قاسم سلیمانی', 'کوپه خواب', 12,
+ 350000,
+ 'سمنان، شاهرود، نیشابور',
+ 'https://images.unsplash.com/photo-1581594549595-35f6edc7b762?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1550558014-4804c9a89533?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80,https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91000001', 'info@rai.ir', 'قطار لوکس کوپه خواب با امکانات کامل و پذیرایی مجلل'),
+
+('تهران', 'مشهد', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '21:30:00', '09:30:00', 'امام رضا', 'درجه یک', 20, 380000,
+ 'سمنان، شاهرود، نیشابور',
+ 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1550558014-4804c9a89533?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80,https://images.unsplash.com/photo-1581594549595-35f6edc7b762?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91000002', 'reservation@rai.ir', 'قطار درجه یک با صندلی‌های راحت و پذیرایی'),
+
+-- قطارهای تهران - اصفهان
+('تهران', 'اصفهان', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '08:30:00', '15:30:00', 'چمران', 'بیزینس', 15, 220000,
+ 'قم، کاشان',
+ 'https://images.unsplash.com/photo-1550558014-4804c9a89533?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80,https://images.unsplash.com/photo-1581594549595-35f6edc7b762?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91000003', 'info@rai.ir', 'قطار بیزینس با اینترنت رایگان و پذیرایی'),
+
+('تهران', 'اصفهان', DATE_ADD(CURDATE(), INTERVAL 2 DAY), '14:00:00', '21:00:00', 'سعدی', 'درجه یک', 18, 240000,
+ 'قم، کاشان',
+ 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1550558014-4804c9a89533?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91000004', 'reservation@rai.ir', 'قطار درجه یک با امکانات مدرن'),
+
+-- قطارهای تهران - شیراز
+('تهران', 'شیراز', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '14:00:00', '04:00:00', 'سعدی', 'درجه یک', 10, 420000,
+ 'اراک، بروجرد، خرم‌آباد',
+ 'https://images.unsplash.com/photo-1581594549595-35f6edc7b762?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1550558014-4804c9a89533?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80,https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91000005', 'info@rai.ir', 'قطار درجه یک با پذیرایی و امکانات کامل'),
+
+-- قطارهای اصفهان - مشهد
+('اصفهان', 'مشهد', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '10:00:00', '22:00:00', 'شاه عباس', 'اکونومی', 25, 300000,
+ 'کاشان، تهران، سمنان، شاهرود',
+ 'https://images.unsplash.com/photo-1550558014-4804c9a89533?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '031-91000006', 'info@rai.ir', 'قطار اکونومی با قیمت مناسب');
+
+-- درج پروازهای تستی
+INSERT INTO flight (origin, destination, origin_airport, destination_airport, departure_date, departure_time,
+                    arrival_time, airline, flight_number, cabin_class, available_seats, price, is_round_trip, image_url,
+                    images, phone, email, description)
+VALUES
+-- پروازهای تهران - مشهد
+('تهران', 'مشهد', 'تهران (IKA)', 'مشهد (MHD)', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '08:30:00', '10:00:00', 'ایران ایر',
+ 'IR123', 'اکونومی', 20, 1200000, FALSE,
+ 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80,https://images.unsplash.com/photo-1556388158-158ea5ccacbd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91020001', 'info@iranair.com', 'پرواز مستقیم ایران ایر با پذیرایی و امکانات کامل'),
+
+('تهران', 'مشهد', 'تهران (IKA)', 'مشهد (MHD)', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '14:00:00', '15:30:00', 'ماهان ایر',
+ 'W5112', 'بیزینس', 8, 2500000, FALSE,
+ 'https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80,https://images.unsplash.com/photo-1556388158-158ea5ccacbd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91020002', 'reservation@mahan.aero', 'پرواز بیزینس ماهان ایر با صندلی‌های راحت'),
+
+-- پروازهای تهران - استانبول
+('تهران', 'استانبول', 'تهران (IKA)', 'استانبول (IST)', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '14:45:00', '17:45:00',
+ 'ترکیش ایرلاینز', 'TK456', 'بیزینس', 10, 3500000, FALSE,
+ 'https://images.unsplash.com/photo-1556388158-158ea5ccacbd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80,https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91020003', 'info@turkishairlines.com', 'پرواز مستقیم ترکیش ایرلاینز با خدمات ۵ ستاره'),
+
+-- پروازهای تهران - دبی
+('تهران', 'دبی', 'تهران (IKA)', 'دبی (DXB)', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '22:15:00', '00:30:00', 'امارات',
+ 'EK972', 'اکونومی', 25, 2800000, FALSE,
+ 'https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1556388158-158ea5ccacbd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80,https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91020004', 'reservation@emirates.com', 'پرواز مستقیم امارات با امکانات کامل'),
+
+-- پروازهای تهران - اصفهان
+('تهران', 'اصفهان', 'تهران (IKA)', 'اصفهان (IFN)', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '07:00:00', '08:15:00',
+ 'ایران ایر', 'IR456', 'اکونومی', 30, 850000, FALSE,
+ 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91020005', 'info@iranair.com', 'پرواز کوتاه مدت تهران به اصفهان'),
+
+-- پروازهای تهران - شیراز
+('تهران', 'شیراز', 'تهران (IKA)', 'شیراز (SYZ)', DATE_ADD(CURDATE(), INTERVAL 2 DAY), '09:30:00', '11:00:00',
+ 'ماهان ایر', 'W5215', 'اکونومی', 22, 1100000, FALSE,
+ 'https://images.unsplash.com/photo-1556388158-158ea5ccacbd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80,https://images.unsplash.com/photo-1540962351504-03099e0a754b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91020006', 'reservation@mahan.aero', 'پرواز مستقیم ماهان ایر با قیمت مناسب');
+
+-- درج اتوبوس‌های تستی
+INSERT INTO bus (origin, destination, departure_date, departure_time, arrival_time, company, bus_type, available_seats,
+                 price, origin_terminal, destination_terminal, image_url, images, phone, email, description)
+VALUES
+-- اتوبوس‌های تهران - مشهد
+('تهران', 'مشهد', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '22:00:00', '08:00:00', 'شرکت مسافربری آسمان', 'VIP', 15, 180000,
+ 'ترمینال بیهقی', 'ترمینال امام رضا',
+ 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1550558014-4804c9a89533?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80,https://images.unsplash.com/photo-1581594549595-35f6edc7b762?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91030001', 'info@aseman-bus.com', 'اتوبوس VIP با صندلی‌های راحت، اینترنت رایگان و پذیرایی'),
+
+('تهران', 'مشهد', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '20:00:00', '06:00:00', 'ایران پیما', 'VIP', 12, 190000,
+ 'ترمینال بیهقی', 'ترمینال امام رضا',
+ 'https://images.unsplash.com/photo-1550558014-4804c9a89533?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91030002', 'reservation@iranpima.com', 'اتوبوس VIP با امکانات کامل'),
+
+-- اتوبوس‌های تهران - اصفهان
+('تهران', 'اصفهان', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '14:30:00', '20:30:00', 'شرکت سپهر سیر', 'معمولی', 8, 90000,
+ 'ترمینال جنوب', 'ترمینال کاوه',
+ 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1550558014-4804c9a89533?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91030003', 'info@sepahrsir.com', 'اتوبوس معمولی با قیمت اقتصادی'),
+
+('تهران', 'اصفهان', DATE_ADD(CURDATE(), INTERVAL 2 DAY), '08:00:00', '14:00:00', 'شرکت سپهر سیر', 'VIP', 18, 120000,
+ 'ترمینال جنوب', 'ترمینال کاوه',
+ 'https://images.unsplash.com/photo-1550558014-4804c9a89533?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91030004', 'reservation@sepahrsir.com', 'اتوبوس VIP با کولر گازی و صندلی راحت'),
+
+-- اتوبوس‌های تهران - شیراز
+('تهران', 'شیراز', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '19:00:00', '09:00:00', 'اتوبوسرانی آسان سفر', 'اتوبوس خواب', 5,
+ 220000,
+ 'ترمینال غرب', 'ترمینال کاراندیش',
+ 'https://images.unsplash.com/photo-1581594549595-35f6edc7b762?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1550558014-4804c9a89533?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80,https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91030005', 'info@asansafar.com', 'اتوبوس خواب با پتو و بالش و صبحانه'),
+
+('تهران', 'شیراز', DATE_ADD(CURDATE(), INTERVAL 2 DAY), '16:00:00', '06:00:00', 'شرکت مسافربری آسمان', 'VIP', 10,
+ 240000,
+ 'ترمینال بیهقی', 'ترمینال کاراندیش',
+ 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1550558014-4804c9a89533?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91030006', 'reservation@aseman-bus.com', 'اتوبوس VIP با اینترنت و پذیرایی'),
+
+-- اتوبوس‌های تهران - تبریز
+('تهران', 'تبریز', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '20:00:00', '07:00:00', 'ایران پیما', 'VIP', 20, 160000,
+ 'ترمینال بیهقی', 'ترمینال تبریز',
+ 'https://images.unsplash.com/photo-1550558014-4804c9a89533?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91030007', 'info@iranpima.com', 'اتوبوس VIP با صندلی‌های راحت'),
+
+-- اتوبوس‌های تهران - یزد
+('تهران', 'یزد', DATE_ADD(CURDATE(), INTERVAL 1 DAY), '16:00:00', '23:00:00', 'یزد سیر', 'معمولی', 0, 110000,
+ 'ترمینال جنوب', 'ترمینال یزد',
+ 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ 'https://images.unsplash.com/photo-1550558014-4804c9a89533?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+ '021-91030008', 'info@yazdsir.com', 'اتوبوس معمولی با قیمت مناسب');
+

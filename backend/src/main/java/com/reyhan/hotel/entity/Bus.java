@@ -1,9 +1,6 @@
 package com.reyhan.hotel.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -75,6 +72,33 @@ public class Bus {
      * ترمینال مقصد
      */
     private String destinationTerminal;
+
+    /**
+     * آدرس تصویر اصلی اتوبوس
+     */
+    private String imageUrl;
+
+    /**
+     * لیست آدرس‌های تصاویر بیشتر (ذخیره به صورت کاما جدا شده)
+     */
+    @Lob
+    private String images;
+
+    /**
+     * شماره تلفن شرکت
+     */
+    private String phone;
+
+    /**
+     * ایمیل شرکت
+     */
+    private String email;
+
+    /**
+     * توضیحات
+     */
+    @Lob
+    private String description;
 
     public Long getId() {
         return id;
@@ -166,6 +190,46 @@ public class Bus {
 
     public void setDestinationTerminal(String destinationTerminal) {
         this.destinationTerminal = destinationTerminal;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
 

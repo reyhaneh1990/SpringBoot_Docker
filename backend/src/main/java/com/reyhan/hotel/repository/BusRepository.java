@@ -13,16 +13,30 @@ import java.util.List;
  */
 public interface BusRepository extends JpaRepository<Bus, Long> {
     /**
-     * جستجوی اتوبوس بر اساس مبدأ، مقصد و تاریخ
+     * جستجوی اتوبوس بر اساس مبدأ، مقصد، تاریخ و نوع
      */
-    @Query("SELECT b FROM Bus b WHERE b.origin = :origin AND b.destination = :destination AND b.departureDate = :date AND b.availableSeats > 0")
+    @Query("""
+                SELECT b FROM Bus b 
+                WHERE (:origin IS NULL OR LOWER(b.origin) LIKE LOWER(CONCAT('%', :origin, '%')))
+                  AND (:destination IS NULL OR LOWER(b.destination) LIKE LOWER(CONCAT('%', :destination, '%')))
+                  AND (:date IS NULL OR b.departureDate = :date)
+                  AND (:busType IS NULL OR b.busType = :busType)
+                  AND b.availableSeats > 0
+                ORDER BY b.price ASC
+            """)
     List<Bus> searchBuses(@Param("origin") String origin,
                           @Param("destination") String destination,
-                          @Param("date") LocalDate date);
+                          @Param("date") LocalDate date,
+                          @Param("busType") String busType);
 
     /**
-     * جستجوی اتوبوس بر اساس نوع
+     * دریافت اتوبوس‌های پرطرفدار (با بیشترین صندلی‌های خالی و قیمت مناسب)
      */
-    List<Bus> findByBusTypeAndDepartureDateAndOriginAndDestination(String busType, LocalDate date, String origin, String destination);
+    @Query("""
+                SELECT b FROM Bus b 
+                WHERE b.availableSeats > 0 
+                ORDER BY b.availableSeats DESC, b.price ASC
+            """)
+    List<Bus> findPopularBuses();
 }
 

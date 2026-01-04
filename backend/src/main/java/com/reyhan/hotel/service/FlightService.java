@@ -30,11 +30,16 @@ public class FlightService {
         if (returnDate != null) {
             return flightRepository.searchRoundTripFlights(origin, destination, date, returnDate);
         }
-        List<Flight> flights = flightRepository.searchFlights(origin, destination, date);
-        if (cabinClass != null && !cabinClass.isEmpty()) {
-            return flights.stream()
-                    .filter(f -> f.getCabinClass().equals(cabinClass))
-                    .toList();
+        return flightRepository.searchFlights(origin, destination, date, cabinClass);
+    }
+
+    /**
+     * دریافت پروازهای پرطرفدار
+     */
+    public List<Flight> findPopularFlights(int limit) {
+        List<Flight> flights = flightRepository.findPopularFlights();
+        if (flights.size() > limit) {
+            return flights.subList(0, limit);
         }
         return flights;
     }

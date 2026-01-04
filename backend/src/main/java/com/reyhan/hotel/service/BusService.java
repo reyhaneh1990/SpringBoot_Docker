@@ -27,10 +27,18 @@ public class BusService {
      * جستجوی اتوبوس
      */
     public List<Bus> searchBuses(String origin, String destination, LocalDate date, String busType) {
-        if (busType != null && !busType.isEmpty()) {
-            return busRepository.findByBusTypeAndDepartureDateAndOriginAndDestination(busType, date, origin, destination);
+        return busRepository.searchBuses(origin, destination, date, busType);
+    }
+
+    /**
+     * دریافت اتوبوس‌های پرطرفدار
+     */
+    public List<Bus> findPopularBuses(int limit) {
+        List<Bus> buses = busRepository.findPopularBuses();
+        if (buses.size() > limit) {
+            return buses.subList(0, limit);
         }
-        return busRepository.searchBuses(origin, destination, date);
+        return buses;
     }
 
     /**

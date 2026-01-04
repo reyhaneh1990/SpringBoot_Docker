@@ -39,11 +39,19 @@ public class BusController {
      */
     @GetMapping("/search")
     public List<Bus> searchBuses(
-            @RequestParam String origin,
-            @RequestParam String destination,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(required = false) String origin,
+            @RequestParam(required = false) String destination,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
             @RequestParam(required = false) String busType) {
         return busService.searchBuses(origin, destination, date, busType);
+    }
+
+    /**
+     * دریافت اتوبوس‌های پرطرفدار
+     */
+    @GetMapping("/popular")
+    public List<Bus> getPopularBuses(@RequestParam(defaultValue = "10") int limit) {
+        return busService.findPopularBuses(limit);
     }
 
     /**

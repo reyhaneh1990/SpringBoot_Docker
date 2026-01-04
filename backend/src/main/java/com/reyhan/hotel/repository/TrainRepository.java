@@ -13,16 +13,30 @@ import java.util.List;
  */
 public interface TrainRepository extends JpaRepository<Train, Long> {
     /**
-     * جستجوی قطار بر اساس مبدأ، مقصد و تاریخ
+     * جستجوی قطار بر اساس مبدأ، مقصد، تاریخ و کلاس
      */
-    @Query("SELECT t FROM Train t WHERE t.origin = :origin AND t.destination = :destination AND t.departureDate = :date AND t.availableSeats > 0")
+    @Query("""
+                SELECT t FROM Train t 
+                WHERE (:origin IS NULL OR LOWER(t.origin) LIKE LOWER(CONCAT('%', :origin, '%')))
+                  AND (:destination IS NULL OR LOWER(t.destination) LIKE LOWER(CONCAT('%', :destination, '%')))
+                  AND (:date IS NULL OR t.departureDate = :date)
+                  AND (:trainClass IS NULL OR t.trainClass = :trainClass)
+                  AND t.availableSeats > 0
+                ORDER BY t.price ASC
+            """)
     List<Train> searchTrains(@Param("origin") String origin,
                              @Param("destination") String destination,
-                             @Param("date") LocalDate date);
+                             @Param("date") LocalDate date,
+                             @Param("trainClass") String trainClass);
 
     /**
-     * جستجوی قطار بر اساس کلاس
+     * دریافت قطارهای پرطرفدار (با بیشترین صندلی‌های خالی و قیمت مناسب)
      */
-    List<Train> findByTrainClassAndDepartureDateAndOriginAndDestination(String trainClass, LocalDate date, String origin, String destination);
+    @Query("""
+                SELECT t FROM Train t 
+                WHERE t.availableSeats > 0 
+                ORDER BY t.availableSeats DESC, t.price ASC
+            """)
+    List<Train> findPopularTrains();
 }
 
