@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>جزئیات پرواز | پرواز مارکوپولو</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <style>
+        .flight-detail-page {
+            background: #f5f7fa;
+            min-height: 80vh;
+            padding: 6rem 0 3rem;
+        }
+
+        .flight-detail-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .flight-route {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .flight-point {
+            text-align: center;
+        }
+
+        .flight-point .time {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .flight-point .city {
+            color: #666;
+        }
+
+        .flight-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .flight-price-big {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .flight-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            color: #555;
+        }
+
+        .airline-block {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .airline-logo-lg {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: #f0f2f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .gallery-grid img {
+            width: 100%;
+            height: 180px;
+            border-radius: 15px;
+            object-fit: cover;
+        }
+
+        .contact-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.8rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+            color: #444;
+        }
+
+        .contact-item i {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .flight-route {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="container nav-container">
+        <a class="logo" href="index.html">
+            <i class="fas fa-rocket"></i>
+            پرواز مارکوپولو
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fas fa-bed"></i> هتل</a></li>
+            <li><a class="active" href="flight.html"><i class="fas fa-plane"></i> پرواز</a></li>
+            <li><a href="train.html"><i class="fas fa-train"></i> قطار</a></li>
+            <li><a href="bus.html"><i class="fas fa-bus"></i> اتوبوس</a></li>
+            <li><a href="tour.html"><i class="fas fa-suitcase-rolling"></i> تور</a></li>
+        </ul>
+
+        <div class="auth-buttons">
+            <button class="btn btn-outline"><i class="fas fa-sign-in-alt"></i> ورود</button>
+            <button class="btn btn-primary"><i class="fas fa-user-plus"></i> ثبت‌نام</button>
+        </div>
+    </div>
+</header>
+
+<main class="flight-detail-page">
+    <div class="container">
+        <div id="loading" style="text-align: center; padding: 4rem 1rem;">
+            <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i>
+            <p style="margin-top: 1rem;">در حال بارگذاری اطلاعات پرواز...</p>
+        </div>
+
+        <div id="error" style="display: none; text-align: center; padding: 4rem 1rem;">
+            <i class="fas fa-exclamation-circle fa-3x" style="color: #f44336; margin-bottom: 1rem;"></i>
+            <h3>پرواز مورد نظر یافت نشد</h3>
+            <p>لطفاً به صفحه جستجوی پرواز بازگردید و دوباره تلاش کنید.</p>
+            <button class="btn btn-primary" onclick="window.location.href='flight.html'" style="margin-top: 1rem;">
+                بازگشت به جستجو
+            </button>
+        </div>
+
+        <div id="content" style="display: none;">
+            <div class="flight-detail-card">
+                <h1 id="title" style="font-size: 2rem; margin-bottom: 1rem;"></h1>
+
+                <div class="flight-route">
+                    <div class="flight-point">
+                        <div class="time" id="depart-time">--:--</div>
+                        <div class="city" id="depart-city"></div>
+                    </div>
+                    <div class="flight-duration">
+                        <i class="fas fa-plane"></i>
+                        <div id="cabin-class" style="margin-top: .5rem;"></div>
+                    </div>
+                    <div class="flight-point">
+                        <div class="time" id="arrival-time">--:--</div>
+                        <div class="city" id="arrival-city"></div>
+                    </div>
+                </div>
+
+                <div class="flight-summary">
+                    <div class="flight-meta">
+                        <span><i class="fas fa-calendar-alt"></i> <span id="depart-date"></span></span>
+                        <span id="roundtrip-row" style="display: none;">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span id="return-date"></span>
+                        </span>
+                        <span><i class="fas fa-chair"></i> صندلی‌های موجود: <span id="available-seats"></span></span>
+                    </div>
+                    <div class="flight-price-big" id="price"></div>
+                </div>
+
+                <div class="airline-block">
+                    <div class="airline-logo-lg">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <div>
+                        <h3 id="airline-name"></h3>
+                        <p id="flight-number" style="color:#666;"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flight-detail-card" id="gallery-card" style="display: none;">
+                <h2 style="margin-bottom: 1rem;">تصاویر پرواز / هواپیما</h2>
+                <div class="gallery-grid" id="gallery-grid"></div>
+            </div>
+
+            <div class="contact-card">
+                <h2 style="margin-bottom: 1rem;">اطلاعات تماس شرکت هواپیمایی</h2>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span id="contact-phone"></span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span id="contact-email"></span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-info-circle"></i>
+                    <span id="description"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>فلایت‌پلاس</h3>
+                <p>سامانه رزرو آنلاین پرواز با ارائه بهترین قیمت و خدمات ویژه برای تجربه‌ای بی‌نظیر از سفرهای هوایی.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>مقاصد پرطرفدار</h3>
+                <ul>
+                    <li><a href="#">تهران به مشهد</a></li>
+                    <li><a href="#">تهران به استانبول</a></li>
+                    <li><a href="#">تهران به دبی</a></li>
+                    <li><a href="#">تهران به آنتالیا</a></li>
+                    <li><a href="#">تهران به تفلیس</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>خدمات ویژه</h3>
+                <ul>
+                    <li><a href="#">بلیط ارزان</a></li>
+                    <li><a href="#">تور لحظه آخری</a></li>
+                    <li><a href="#">ویزای فرودگاهی</a></li>
+                    <li><a href="#">بیمه مسافرتی</a></li>
+                    <li><a href="#">کرایه خودرو</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>تماس با ما</h3>
+                <ul>
+                    <li><i class="fas fa-phone"></i> ۰۲۱-۹۱۰۲۲۲۲۲</li>
+                    <li><i class="fas fa-envelope"></i> info@flightplus.ir</li>
+                    <li><i class="fas fa-map-marker-alt"></i> تهران، میدان ونک</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <p>© ۲۰۲۴ تمامی حقوق برای فلایت‌پلاس محفوظ است.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="config.js"></script>
+<script>
+    const api = (path) => `${window.BACKEND_BASE_URL || 'http://localhost:8080'}${path}`;
+
+    async function loadFlightDetails() {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        const content = document.getElementById('content');
+
+        if (!id) {
+            loading.style.display = 'none';
+            error.style.display = 'block';
+            return;
+        }
+
+        try {
+            const res = await fetch(api(`/api/flights/${id}`));
+            if (!res.ok) throw new Error();
+            const flight = await res.json();
+
+            document.title = `${flight.origin} → ${flight.destination} | پرواز مارکوپولو`;
+            document.getElementById('title').textContent = `${flight.origin} → ${flight.destination}`;
+
+            document.getElementById('depart-time').textContent = flight.departureTime || '—';
+            document.getElementById('arrival-time').textContent = flight.arrivalTime || '—';
+            document.getElementById('depart-city').textContent = flight.originAirport || flight.origin;
+            document.getElementById('arrival-city').textContent = flight.destinationAirport || flight.destination;
+            document.getElementById('depart-date').textContent = flight.departureDate || '';
+
+            if (flight.returnDate) {
+                document.getElementById('roundtrip-row').style.display = 'inline-flex';
+                document.getElementById('return-date').textContent = `تاریخ برگشت: ${flight.returnDate}`;
+            }
+
+            document.getElementById('cabin-class').textContent = flight.cabinClass || '';
+            document.getElementById('available-seats').textContent = flight.availableSeats != null ? flight.availableSeats : '—';
+
+            const priceText = flight.price ? flight.price.toLocaleString('fa-IR') + ' تومان' : 'قیمت نامشخص';
+            document.getElementById('price').textContent = priceText;
+
+            document.getElementById('airline-name').textContent = flight.airline || '—';
+            document.getElementById('flight-number').textContent = flight.flightNumber ? `شماره پرواز: ${flight.flightNumber}` : '';
+
+            document.getElementById('contact-phone').textContent = flight.phone || 'نامشخص';
+            document.getElementById('contact-email').textContent = flight.email || 'نامشخص';
+            document.getElementById('description').textContent = flight.description || 'توضیحات تکمیلی برای این پرواز ثبت نشده است.';
+
+            // گالری تصاویر
+            const galleryCard = document.getElementById('gallery-card');
+            const galleryGrid = document.getElementById('gallery-grid');
+            const images = [];
+            if (flight.imageUrl) images.push(flight.imageUrl);
+            if (flight.images) {
+                flight.images.split(',').map(u => u.trim()).filter(Boolean).forEach(u => images.push(u));
+            }
+            if (images.length) {
+                images.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = `${flight.origin} → ${flight.destination}`;
+                    img.onerror = () => img.style.display = 'none';
+                    galleryGrid.appendChild(img);
+                });
+                galleryCard.style.display = 'block';
+            }
+
+            loading.style.display = 'none';
+            content.style.display = 'block';
+        } catch (e) {
+            console.error('Error loading flight details', e);
+            loading.style.display = 'none';
+            error.style.display = 'block';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadFlightDetails);
+</script>
+</body>
+</html>
+
+

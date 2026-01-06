@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>نتایج جستجوی پرواز | پرواز مارکوپولو</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="container nav-container">
+        <a class="logo" href="index.html">
+            <i class="fas fa-rocket"></i>
+            پرواز مارکوپولو
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fas fa-bed"></i> هتل</a></li>
+            <li><a class="active" href="flight.html"><i class="fas fa-plane"></i> پرواز</a></li>
+            <li><a href="train.html"><i class="fas fa-train"></i> قطار</a></li>
+            <li><a href="bus.html"><i class="fas fa-bus"></i> اتوبوس</a></li>
+            <li><a href="tour.html"><i class="fas fa-suitcase-rolling"></i> تور</a></li>
+        </ul>
+
+        <div class="auth-buttons">
+            <button class="btn btn-outline"><i class="fas fa-sign-in-alt"></i> ورود</button>
+            <button class="btn btn-primary"><i class="fas fa-user-plus"></i> ثبت‌نام</button>
+        </div>
+    </div>
+</header>
+
+<main style="background: #f5f7fa; min-height: 80vh; padding: 5rem 0 3rem;">
+    <div class="container">
+        <div class="section-title" style="text-align: center; margin-bottom: 2rem;">
+            <h2>نتایج جستجوی پرواز</h2>
+            <p id="search-summary">در حال بارگذاری نتایج...</p>
+        </div>
+
+        <section class="offers-section" id="results-section">
+            <div id="loading" style="text-align: center; padding: 3rem;">
+                <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i>
+                <p style="margin-top: 1rem;">در حال جستجوی پروازها...</p>
+            </div>
+            <div id="no-results" style="display: none; text-align: center; padding: 3rem;">
+                <i class="fas fa-search fa-3x" style="color: #ccc; margin-bottom: 1rem;"></i>
+                <h3>پروازی یافت نشد</h3>
+                <p>لطفاً مبدأ، مقصد یا تاریخ را تغییر دهید و دوباره تلاش کنید.</p>
+                <button class="btn btn-primary" onclick="window.location.href='flight.html'"
+                        style="margin-top: 1rem;">
+                    بازگشت به جستجوی پرواز
+                </button>
+            </div>
+            <div class="offers-grid" id="flights-grid" style="display: none;"></div>
+        </section>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>فلایت‌پلاس</h3>
+                <p>سامانه رزرو آنلاین پرواز با ارائه بهترین قیمت و خدمات ویژه برای تجربه‌ای بی‌نظیر از سفرهای هوایی.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>مقاصد پرطرفدار</h3>
+                <ul>
+                    <li><a href="#">تهران به مشهد</a></li>
+                    <li><a href="#">تهران به استانبول</a></li>
+                    <li><a href="#">تهران به دبی</a></li>
+                    <li><a href="#">تهران به آنتالیا</a></li>
+                    <li><a href="#">تهران به تفلیس</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>خدمات ویژه</h3>
+                <ul>
+                    <li><a href="#">بلیط ارزان</a></li>
+                    <li><a href="#">تور لحظه آخری</a></li>
+                    <li><a href="#">ویزای فرودگاهی</a></li>
+                    <li><a href="#">بیمه مسافرتی</a></li>
+                    <li><a href="#">کرایه خودرو</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>تماس با ما</h3>
+                <ul>
+                    <li><i class="fas fa-phone"></i> ۰۲۱-۹۱۰۲۲۲۲۲</li>
+                    <li><i class="fas fa-envelope"></i> info@flightplus.ir</li>
+                    <li><i class="fas fa-map-marker-alt"></i> تهران، میدان ونک</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <p>© ۲۰۲۴ تمامی حقوق برای فلایت‌پلاس محفوظ است.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="config.js"></script>
+<script>
+    const api = (path) => `${window.BACKEND_BASE_URL || 'http://localhost:8080'}${path}`;
+
+    function buildSummary(params) {
+        const parts = [];
+        const origin = params.get('origin');
+        const destination = params.get('destination');
+        const date = params.get('date');
+        const returnDate = params.get('returnDate');
+        const cabinClass = params.get('cabinClass');
+
+        if (origin && destination) {
+            parts.push(`از ${origin} به ${destination}`);
+        } else if (origin) {
+            parts.push(`از ${origin}`);
+        } else if (destination) {
+            parts.push(`به ${destination}`);
+        }
+
+        if (date) {
+            if (returnDate) {
+                parts.push(`رفت: ${date} - برگشت: ${returnDate}`);
+            } else {
+                parts.push(`تاریخ پرواز: ${date}`);
+            }
+        }
+
+        if (cabinClass) {
+            parts.push(`کلاس پروازی: ${cabinClass}`);
+        }
+
+        return parts.length ? parts.join(" | ") : "همه پروازهای موجود";
+    }
+
+    async function loadFlights() {
+        const params = new URLSearchParams(window.location.search);
+        document.getElementById('search-summary').textContent = buildSummary(params);
+
+        const loading = document.getElementById('loading');
+        const noResults = document.getElementById('no-results');
+        const grid = document.getElementById('flights-grid');
+
+        try {
+            const qs = new URLSearchParams();
+            ['origin', 'destination', 'date', 'returnDate', 'cabinClass'].forEach(key => {
+                const v = params.get(key);
+                if (v) qs.append(key, v);
+            });
+
+            const res = await fetch(api(`/api/flights/search?${qs.toString()}`));
+            if (!res.ok) throw new Error();
+
+            const flights = await res.json();
+            loading.style.display = 'none';
+
+            if (!flights || flights.length === 0) {
+                noResults.style.display = 'block';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            grid.innerHTML = '';
+
+            flights.forEach(flight => {
+                const card = document.createElement('div');
+                card.className = 'offer-card';
+                card.style.cursor = 'pointer';
+                card.onclick = () => window.location.href = `flight-details.html?id=${flight.id}`;
+
+                const priceText = flight.price ? flight.price.toLocaleString('fa-IR') + ' تومان' : 'قیمت نامشخص';
+                const departTime = flight.departureTime || '—';
+                const arrivalTime = flight.arrivalTime || '—';
+
+                card.innerHTML = `
+                    <div class="offer-header">
+                        <h3>${flight.origin} → ${flight.destination}</h3>
+                    </div>
+                    <div class="offer-body">
+                        <div class="flight-details">
+                            <div class="flight-info">
+                                <div class="time">${departTime}</div>
+                                <div class="city">${flight.originAirport || flight.origin}</div>
+                            </div>
+                            <div class="flight-duration">
+                                <i class="fas fa-plane"></i>
+                                <div>${flight.cabinClass || ''}</div>
+                                <div>${flight.isRoundTrip ? 'رفت و برگشت' : 'یک‌طرفه'}</div>
+                            </div>
+                            <div class="flight-info">
+                                <div class="time">${arrivalTime}</div>
+                                <div class="city">${flight.destinationAirport || flight.destination}</div>
+                            </div>
+                        </div>
+                        <div class="airline-info">
+                            <div class="airline-logo">
+                                <i class="fas fa-plane"></i>
+                            </div>
+                            <div>
+                                <h4>${flight.airline || '—'}</h4>
+                                <p>${flight.flightNumber || ''}</p>
+                            </div>
+                        </div>
+                        <div class="offer-price">${priceText}</div>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        } catch (e) {
+            console.error('Error loading flights', e);
+            loading.style.display = 'none';
+            noResults.style.display = 'block';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadFlights);
+</script>
+</body>
+</html>
+
+

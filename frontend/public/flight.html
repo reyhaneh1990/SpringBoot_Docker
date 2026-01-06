@@ -663,7 +663,7 @@
                 <div class="flight-form">
                     <div class="input-group">
                         <i class="fas fa-plane-departure"></i>
-                        <input list="airports" placeholder="مبدأ (شهر یا فرودگاه)" type="text">
+                        <input id="originInput" list="airports" placeholder="مبدأ (شهر یا فرودگاه)" type="text">
                         <datalist id="airports">
                             <option value="تهران (IKA)"></option>
                             <option value="مشهد (MHD)"></option>
@@ -681,7 +681,7 @@
 
                     <div class="input-group">
                         <i class="fas fa-plane-arrival"></i>
-                        <input placeholder="مقصد (شهر یا فرودگاه)" type="text">
+                        <input id="destinationInput" placeholder="مقصد (شهر یا فرودگاه)" type="text">
                     </div>
                 </div>
 
@@ -716,7 +716,7 @@
                     </div>
                 </div>
 
-                <button class="search-btn">
+                <button class="search-btn" id="flightSearchBtn">
                     <i class="fas fa-search"></i>
                     جستجوی پرواز
                 </button>
@@ -1001,7 +1001,7 @@
         });
     });
 
-    // مدیریت دکمه رزرو
+    // مدیریت دکمه رزرو نمونه (فعلاً فقط پیام ساده)
     document.querySelectorAll('.book-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             const flight = this.closest('.offer-card').querySelector('.offer-header h3').textContent;
@@ -1020,8 +1020,31 @@
     setTimeout(() => {
         window.dispatchEvent(new Event('scroll'));
     }, 1000);
+
+    // اجرای جستجو: هدایت به صفحه نتایج
+    function performFlightSearch() {
+        const originRaw = document.getElementById('originInput').value || '';
+        const destinationRaw = document.getElementById('destinationInput').value || '';
+        const origin = originRaw.split('(')[0].trim();
+        const destination = destinationRaw.split('(')[0].trim();
+        const departDate = document.getElementById('departDate')?.value;
+        const returnDate = document.getElementById('returnDate')?.value;
+        const cabinClass = document.getElementById('cabinClass')?.value;
+
+        const params = new URLSearchParams();
+        if (origin) params.append('origin', origin);
+        if (destination) params.append('destination', destination);
+        if (departDate) params.append('date', departDate);
+        if (returnDate && returnDateGroup.style.display !== 'none') {
+            params.append('returnDate', returnDate);
+        }
+        if (cabinClass) params.append('cabinClass', cabinClass);
+
+        window.location.href = `flight-results.html?${params.toString()}`;
+    }
+
+    document.getElementById('flightSearchBtn').addEventListener('click', performFlightSearch);
 </script>
 <script src="config.js"></script>
-<script src="flight.js"></script>
 </body>
 </html>

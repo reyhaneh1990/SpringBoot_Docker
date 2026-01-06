@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>نتایج جستجوی اتوبوس | هتل مارکوپولو</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body class="bus-page">
+<header>
+    <div class="container nav-container">
+        <a class="logo" href="index.html">
+            <i class="fas fa-bus"></i>
+            هتل مارکوپولو
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fas fa-bed"></i> هتل</a></li>
+            <li><a href="flight.html"><i class="fas fa-plane"></i> پرواز</a></li>
+            <li><a href="train.html"><i class="fas fa-train"></i> قطار</a></li>
+            <li><a class="active" href="bus.html"><i class="fas fa-bus"></i> اتوبوس</a></li>
+            <li><a href="tour.html"><i class="fas fa-umbrella-beach"></i> تور</a></li>
+        </ul>
+
+        <div class="auth-buttons">
+            <button class="btn btn-outline" onclick="window.location.href='login.html'">
+                <i class="fas fa-sign-in-alt"></i> ورود
+            </button>
+            <button class="btn btn-primary" onclick="window.location.href='register.html'">
+                <i class="fas fa-user-plus"></i> ثبت‌نام
+            </button>
+        </div>
+    </div>
+</header>
+
+<main style="background:#f5f7fa; min-height:80vh; padding:5rem 0 3rem;">
+    <div class="container">
+        <div class="section-title">
+            <h2>نتایج جستجوی اتوبوس</h2>
+            <p id="search-summary">در حال بارگذاری نتایج...</p>
+        </div>
+
+        <section class="bus-routes">
+            <div id="loading" style="text-align:center; padding:3rem;">
+                <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i>
+                <p style="margin-top:1rem;">در حال جستجوی اتوبوس‌ها...</p>
+            </div>
+            <div id="no-results" style="display:none; text-align:center; padding:3rem;">
+                <i class="fas fa-search fa-3x" style="color:#ccc; margin-bottom:1rem;"></i>
+                <h3>اتوبوسی یافت نشد</h3>
+                <p>لطفاً مبدأ، مقصد یا تاریخ را تغییر دهید و دوباره تلاش کنید.</p>
+                <button class="btn btn-primary" onclick="window.location.href='bus.html'" style="margin-top:1rem;">
+                    بازگشت به جستجوی اتوبوس
+                </button>
+            </div>
+            <div class="routes-grid" id="buses-grid" style="display:none;"></div>
+        </section>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>بخش اتوبوس</h3>
+                <p>رزرو آنلاین بلیط اتوبوس‌های VIP و معمولی به تمامی مقاصد داخلی.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>لینک‌های مفید</h3>
+                <ul>
+                    <li><a href="#">درباره ما</a></li>
+                    <li><a href="#">تماس با ما</a></li>
+                    <li><a href="#">قوانین رزرو اتوبوس</a></li>
+                    <li><a href="#">سوالات متداول</a></li>
+                    <li><a href="#">وبلاگ سفر</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>خدمات اتوبوس</h3>
+                <ul>
+                    <li><a href="#">اتوبوس‌های VIP</a></li>
+                    <li><a href="#">اتوبوس‌های خواب</a></li>
+                    <li><a href="#">اتوبوس‌های توریستی</a></li>
+                    <li><a href="#">رزرو گروهی</a></li>
+                    <li><a href="#">ترمینال‌ها</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>تماس با ما</h3>
+                <ul>
+                    <li><i class="fas fa-phone"></i> ۰۲۱-۹۱۰۱۱۱۱۱</li>
+                    <li><i class="fas fa-envelope"></i> bus@hotelplus.ir</li>
+                    <li><i class="fas fa-map-marker-alt"></i> تهران، خیابان ولیعصر</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <p>© ۲۰۲۴ تمامی حقوق برای هتل‌مارکوپولو محفوظ است.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="config.js"></script>
+<script>
+    const api = (path) => `${window.BACKEND_BASE_URL || 'http://localhost:8080'}${path}`;
+
+    function buildBusSummary(params) {
+        const origin = params.get('origin');
+        const destination = params.get('destination');
+        const date = params.get('date');
+        const busType = params.get('busType');
+        const parts = [];
+        if (origin && destination) parts.push(`از ${origin} به ${destination}`);
+        else if (origin) parts.push(`از ${origin}`);
+        else if (destination) parts.push(`به ${destination}`);
+        if (date) parts.push(`تاریخ حرکت: ${date}`);
+        if (busType) parts.push(`نوع اتوبوس: ${busType}`);
+        return parts.length ? parts.join(' | ') : 'همه سرویس‌های اتوبوس موجود';
+    }
+
+    async function loadBuses() {
+        const params = new URLSearchParams(window.location.search);
+        document.getElementById('search-summary').textContent = buildBusSummary(params);
+
+        const loading = document.getElementById('loading');
+        const noResults = document.getElementById('no-results');
+        const grid = document.getElementById('buses-grid');
+
+        try {
+            const qs = new URLSearchParams();
+            ['origin', 'destination', 'date', 'busType'].forEach(key => {
+                const v = params.get(key);
+                if (v) qs.append(key, v);
+            });
+
+            const res = await fetch(api(`/api/buses/search?${qs.toString()}`));
+            if (!res.ok) throw new Error();
+            const buses = await res.json();
+
+            loading.style.display = 'none';
+
+            if (!buses || buses.length === 0) {
+                noResults.style.display = 'block';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            grid.innerHTML = '';
+
+            buses.forEach(bus => {
+                const card = document.createElement('div');
+                card.className = 'bus-route-card';
+                card.style.cursor = 'pointer';
+                card.onclick = () => window.location.href = `bus-details.html?id=${bus.id}`;
+
+                const priceText = bus.price ? bus.price.toLocaleString('fa-IR') + ' تومان' : 'قیمت نامشخص';
+
+                card.innerHTML = `
+                    <div class="bus-route-header">
+                        <div class="bus-route-title">${bus.origin} - ${bus.destination}</div>
+                        <div class="bus-route-price">از ${priceText}</div>
+                    </div>
+                    <div class="bus-route-details">
+                        <div class="bus-route-time">
+                            <div class="time">${bus.departureTime || '—'}</div>
+                            <div class="city">${bus.originTerminal || bus.origin}</div>
+                        </div>
+                        <div class="bus-duration">${bus.busType || ''}</div>
+                        <div class="bus-route-time">
+                            <div class="time">${bus.arrivalTime || '—'}</div>
+                            <div class="city">${bus.destinationTerminal || bus.destination}</div>
+                        </div>
+                    </div>
+                    <div class="bus-company">
+                        <div class="bus-company-logo">${(bus.company || 'شرکت').substring(0, 2)}</div>
+                        <span>${bus.company || ''}</span>
+                    </div>
+                    <div class="bus-seats">
+                        <i class="fas fa-chair"></i>
+                        <span>${bus.availableSeats != null ? bus.availableSeats + ' صندلی خالی' : 'ظرفیت نامشخص'}</span>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        } catch (e) {
+            console.error('Error loading buses', e);
+            loading.style.display = 'none';
+            noResults.style.display = 'block';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadBuses);
+</script>
+</body>
+</html>
+
+

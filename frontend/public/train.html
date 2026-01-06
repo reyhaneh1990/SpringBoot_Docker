@@ -419,28 +419,27 @@
         }
     });
 
-    // شبیه‌سازی جستجو
+    // هدایت جستجو به صفحه نتایج قطار
     document.getElementById('search-trains').addEventListener('click', function () {
         const origin = document.getElementById('origin').value;
         const destination = document.getElementById('destination').value;
         const date = document.getElementById('travel-date').value;
-        const selectedClass = document.querySelector('.class-option.active').getAttribute('data-class');
+        const selectedClass = document.querySelector('.class-option.active')?.getAttribute('data-class');
 
-        if (origin && destination) {
-            const classNames = {
-                'economy': 'اکونومی',
-                'business': 'بیزینس',
-                'first': 'درجه یک',
-                'sleeper': 'کوپه خواب'
-            };
-
-            alert(`در حال جستجوی قطار از ${origin} به ${destination} در تاریخ ${date} با کلاس ${classNames[selectedClass]} ...`);
-        } else {
-            alert('لطفاً مبدأ و مقصد را وارد کنید.');
+        if (!origin || !destination || !date) {
+            alert('لطفاً مبدأ، مقصد و تاریخ را وارد کنید.');
+            return;
         }
+
+        const params = new URLSearchParams();
+        params.append('origin', origin);
+        params.append('destination', destination);
+        params.append('date', date);
+        if (selectedClass) params.append('trainClass', selectedClass);
+
+        window.location.href = `train-results.html?${params.toString()}`;
     });
 </script>
 <script src="config.js"></script>
-<script src="train.js"></script>
 </body>
 </html>

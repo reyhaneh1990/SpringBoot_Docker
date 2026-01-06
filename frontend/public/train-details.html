@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>جزئیات قطار | هتل مارکوپولو</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <style>
+        .train-detail-page {
+            background: #f5f7fa;
+            min-height: 80vh;
+            padding: 5rem 0 3rem;
+        }
+
+        .train-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .train-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .train-title {
+            font-size: 1.8rem;
+        }
+
+        .train-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .train-route {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .train-point {
+            text-align: center;
+        }
+
+        .train-point .time {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .train-point .city {
+            color: #666;
+        }
+
+        .train-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            color: #555;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .gallery-grid img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        .contact-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 1.8rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+            color: #444;
+        }
+
+        .contact-item i {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container nav-container">
+        <a class="logo" href="index.html">
+            <i class="fas fa-train"></i>
+            هتل مارکوپولو
+        </a>
+
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fas fa-bed"></i> هتل</a></li>
+            <li><a href="flight.html"><i class="fas fa-plane"></i> پرواز</a></li>
+            <li><a class="active" href="train.html"><i class="fas fa-train"></i> قطار</a></li>
+            <li><a href="bus.html"><i class="fas fa-bus"></i> اتوبوس</a></li>
+            <li><a href="tour.html"><i class="fas fa-umbrella-beach"></i> تور</a></li>
+        </ul>
+
+        <div class="auth-buttons">
+            <button class="btn btn-outline" onclick="window.location.href='login.html'">
+                <i class="fas fa-sign-in-alt"></i> ورود
+            </button>
+            <button class="btn btn-primary" onclick="window.location.href='register.html'">
+                <i class="fas fa-user-plus"></i> ثبت‌نام
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="train-detail-page">
+    <div class="container">
+        <div id="loading" style="text-align:center; padding:4rem 1rem;">
+            <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary);"></i>
+            <p style="margin-top:1rem;">در حال بارگذاری اطلاعات قطار...</p>
+        </div>
+
+        <div id="error" style="display:none; text-align:center; padding:4rem 1rem;">
+            <i class="fas fa-exclamation-circle fa-3x" style="color:#f44336; margin-bottom:1rem;"></i>
+            <h3>قطار مورد نظر یافت نشد</h3>
+            <p>لطفاً به صفحه جستجوی قطار بازگردید و دوباره تلاش کنید.</p>
+            <button class="btn btn-primary" onclick="window.location.href='train.html'" style="margin-top:1rem;">
+                بازگشت به جستجو
+            </button>
+        </div>
+
+        <div id="content" style="display:none;">
+            <div class="train-card">
+                <div class="train-header">
+                    <h1 class="train-title" id="title"></h1>
+                    <div class="train-price" id="price"></div>
+                </div>
+
+                <div class="train-route">
+                    <div class="train-point">
+                        <div class="time" id="depart-time">--:--</div>
+                        <div class="city" id="depart-city"></div>
+                    </div>
+                    <div class="train-meta">
+                        <span><i class="fas fa-calendar-alt"></i> <span id="depart-date"></span></span>
+                        <span><i class="fas fa-train"></i> نام قطار: <span id="train-name"></span></span>
+                        <span><i class="fas fa-layer-group"></i> کلاس: <span id="train-class"></span></span>
+                        <span><i class="fas fa-chair"></i> صندلی‌های خالی: <span id="available-seats"></span></span>
+                    </div>
+                    <div class="train-point">
+                        <div class="time" id="arrival-time">--:--</div>
+                        <div class="city" id="arrival-city"></div>
+                    </div>
+                </div>
+
+                <div class="train-meta" style="margin-top:1rem;">
+                    <span><i class="fas fa-route"></i> مسیر و توقف‌ها: <span id="stops"></span></span>
+                </div>
+            </div>
+
+            <div class="train-card" id="gallery-card" style="display:none;">
+                <h2 style="margin-bottom:1rem;">تصاویر قطار</h2>
+                <div class="gallery-grid" id="gallery-grid"></div>
+            </div>
+
+            <div class="contact-card">
+                <h2 style="margin-bottom:1rem;">اطلاعات تماس شرکت ریلی</h2>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span id="contact-phone"></span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span id="contact-email"></span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-info-circle"></i>
+                    <span id="description"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>بخش قطار</h3>
+                <p>رزرو آنلاین بلیط تمامی قطارهای داخلی و بین‌المللی با بهترین خدمات و امکانات.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>لینک‌های مفید</h3>
+                <ul>
+                    <li><a href="#">درباره ما</a></li>
+                    <li><a href="#">تماس با ما</a></li>
+                    <li><a href="#">قوانین رزرو قطار</a></li>
+                    <li><a href="#">سوالات متداول</a></li>
+                    <li><a href="#">وبلاگ سفر</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>خدمات قطار</h3>
+                <ul>
+                    <li><a href="#">قطارهای داخلی</a></li>
+                    <li><a href="#">قطارهای بین‌المللی</a></li>
+                    <li><a href="#">قطارهای توریستی</a></li>
+                    <li><a href="#">قطارهای لوکس</a></li>
+                    <li><a href="#">رزرو کوپه خواب</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>تماس با ما</h3>
+                <ul>
+                    <li><i class="fas fa-phone"></i> ۰۲۱-۹۱۰۱۱۱۱۱</li>
+                    <li><i class="fas fa-envelope"></i> train@hotelplus.ir</li>
+                    <li><i class="fas fa-map-marker-alt"></i> تهران، خیابان ولیعصر</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <p>© ۲۰۲۴ تمامی حقوق برای هتل‌مارکوپولو محفوظ است.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="config.js"></script>
+<script>
+    const api = (path) => `${window.BACKEND_BASE_URL || 'http://localhost:8080'}${path}`;
+
+    async function loadTrainDetails() {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        const content = document.getElementById('content');
+
+        if (!id) {
+            loading.style.display = 'none';
+            error.style.display = 'block';
+            return;
+        }
+
+        try {
+            const res = await fetch(api(`/api/trains/${id}`));
+            if (!res.ok) throw new Error();
+            const train = await res.json();
+
+            document.title = `${train.origin} - ${train.destination} | هتل مارکوپولو`;
+            document.getElementById('title').textContent = `${train.origin} - ${train.destination}`;
+
+            document.getElementById('depart-time').textContent = train.departureTime || '—';
+            document.getElementById('arrival-time').textContent = train.arrivalTime || '—';
+            document.getElementById('depart-date').textContent = train.departureDate || '';
+            document.getElementById('depart-city').textContent = train.origin;
+            document.getElementById('arrival-city').textContent = train.destination;
+
+            const priceText = train.price ? train.price.toLocaleString('fa-IR') + ' تومان' : 'قیمت نامشخص';
+            document.getElementById('price').textContent = priceText;
+
+            document.getElementById('train-name').textContent = train.trainName || 'نامشخص';
+            document.getElementById('train-class').textContent = train.trainClass || 'نامشخص';
+            document.getElementById('available-seats').textContent =
+                train.availableSeats != null ? train.availableSeats : 'نامشخص';
+            document.getElementById('stops').textContent = train.stops || 'بدون توقف ثبت‌شده';
+
+            document.getElementById('contact-phone').textContent = train.phone || 'نامشخص';
+            document.getElementById('contact-email').textContent = train.email || 'نامشخص';
+            document.getElementById('description').textContent =
+                train.description || 'توضیحات تکمیلی برای این قطار ثبت نشده است.';
+
+            const galleryCard = document.getElementById('gallery-card');
+            const galleryGrid = document.getElementById('gallery-grid');
+            const images = [];
+            if (train.imageUrl) images.push(train.imageUrl);
+            if (train.images) {
+                train.images.split(',').map(u => u.trim()).filter(Boolean).forEach(u => images.push(u));
+            }
+            if (images.length) {
+                images.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = `${train.origin} - ${train.destination}`;
+                    img.onerror = () => img.style.display = 'none';
+                    galleryGrid.appendChild(img);
+                });
+                galleryCard.style.display = 'block';
+            }
+
+            loading.style.display = 'none';
+            content.style.display = 'block';
+        } catch (e) {
+            console.error('Error loading train details', e);
+            loading.style.display = 'none';
+            error.style.display = 'block';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadTrainDetails);
+</script>
+</body>
+</html>
+
+

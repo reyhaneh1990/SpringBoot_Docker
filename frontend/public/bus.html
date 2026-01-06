@@ -515,28 +515,28 @@
         }
     });
 
-    // شبیه‌سازی جستجو
+    // هدایت جستجو به صفحه نتایج اتوبوس
     document.getElementById('search-bus').addEventListener('click', function () {
         const origin = document.getElementById('bus-origin').value;
         const destination = document.getElementById('bus-destination').value;
         const date = document.getElementById('bus-date').value;
-        const selectedClass = document.querySelector('.bus-class-option.active').getAttribute('data-class');
+        const selectedClass = document.querySelector('.bus-class-option.active')?.getAttribute('data-class');
 
-        if (origin && destination) {
-            const classNames = {
-                'normal': 'اتوبوس معمولی',
-                'vip': 'اتوبوس VIP',
-                'sleeper': 'اتوبوس خواب',
-                'tourist': 'تور گردشگری'
-            };
-
-            alert(`در حال جستجوی اتوبوس از ${origin} به ${destination} در تاریخ ${date} با کلاس ${classNames[selectedClass]} ...`);
-        } else {
-            alert('لطفاً مبدأ و مقصد را وارد کنید.');
+        if (!origin || !destination || !date) {
+            alert('لطفاً مبدأ، مقصد و تاریخ را وارد کنید.');
+            return;
         }
+
+        const params = new URLSearchParams();
+        params.append('origin', origin);
+        params.append('destination', destination);
+        params.append('date', date);
+        if (selectedClass) params.append('busType', selectedClass);
+
+        window.location.href = `bus-results.html?${params.toString()}`;
     });
 
-    // شبیه‌سازی رزرو بلیط
+    // شبیه‌سازی رزرو بلیط نمونه
     document.querySelectorAll('.book-btn').forEach((btn, index) => {
         if (!btn.classList.contains('secondary')) {
             btn.addEventListener('click', function () {
@@ -550,6 +550,5 @@
     });
 </script>
 <script src="config.js"></script>
-<script src="bus.js"></script>
 </body>
 </html>
